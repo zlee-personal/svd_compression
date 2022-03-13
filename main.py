@@ -1,5 +1,4 @@
 from PIL import Image, ImageTk
-import PIL
 from numpy import asarray
 from numpy.linalg import svd
 import numpy as np
@@ -18,7 +17,7 @@ A = asarray(image)
 
 u, s, vh = svd(A)
 
-print(f'A: {A.shape}, u: {u[:,[0]].shape}, vh: {vh[[0],].shape}')
+print(f'A: {A.shape}, u: {u.shape}, vh: {vh.shape}')
 
 def ith_singular_product(i: int):
     win = tkinter.Tk()
@@ -26,18 +25,20 @@ def ith_singular_product(i: int):
     #Create a canvas
     canvas= tkinter.Canvas(win, width= 600, height= 400)
     canvas.pack()
+    text_str = tkinter.StringVar()
+    text = tkinter.Label(win, textvariable=text_str)
+    text.pack()
     #Load an image in the script
-    img=ImageTk.PhotoImage(Image.open("actual_grey.png"))
-    #Add image to the Canvas Items
-    canvas.create_image(10,10,anchor=tkinter.NW,image=img)
     sum = np.zeros(A.shape)
     for count in range(i):
         sum += s[count]*(u[:,[count]] @ vh[[count],])
         pil_image = Image.fromarray(sum)
         img = ImageTk.PhotoImage(pil_image)
         canvas.create_image(10,10,anchor=tkinter.NW,image=img)
+        percent = count * (u.shape[0] + vh.shape[0]) / (A.shape[0] * A.shape[1])*100
+        text_str.set(f'Singular Values: {count}\n{percent:.2f}% of original size')
         win.update()
-        time.sleep(1)
+        time.sleep(0.2)
 
     win.mainloop() 
 
