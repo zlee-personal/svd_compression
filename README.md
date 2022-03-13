@@ -1,7 +1,7 @@
-#Usage
+# Usage
 
 `python main.py [filename]`
 
-#Example:
+# Example:
 
 ![Example GIF](example.gif)
